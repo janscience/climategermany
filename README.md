@@ -4,7 +4,7 @@
 
 Climate data of Germany on a 1km grid can be downloaded from the DWD
 (Deutscher Wetterdienst) at
-[opendata.dwd.de](http://opendata.dwd.de/climate_environment/CDC/grids_germany/annual/):
+[opendata.dwd.de](http://opendata.dwd.de/climate_environment/CDC/grids_germany/):
 
 ```bash
 > wget -r -np -nH --cut-dirs=3 http://opendata.dwd.de/climate_environment/CDC/grids_germany/annual/air_temperature_mean/
@@ -36,3 +36,13 @@ Here is a list of all available annual data:
 - [sunshine_duration](http://opendata.dwd.de/climate_environment/CDC/grids_germany/annual/sunshine_duration/)
 - [vegetation_begin](http://opendata.dwd.de/climate_environment/CDC/grids_germany/annual/vegetation_begin/)
 - [vegetation_end](http://opendata.dwd.de/climate_environment/CDC/grids_germany/annual/vegetation_end/)
+
+## Mean annual air temperature
+
+Data are available from 1881 on.
+
+![air_temp_mean](images/air_temp_mean.png)
+
+Well, mean air temperature is steadily raising from about 1980 on!
+
+See also [wikipedia](https://de.wikipedia.org/wiki/Zeitreihe_der_Lufttemperatur_in_Deutschland)
