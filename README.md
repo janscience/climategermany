@@ -43,6 +43,8 @@ Data are available from 1881 on.
 
 ![air_temp_mean](images/air_temp_mean.png)
 
-Well, mean air temperature is steadily raising from about 1980 on!
+Well, quite obviously, mean air temperature is steadily raising from
+about 1980 on. The mean air temperature in Germany is already about
+2°C higher than before 1980!
 
 See also [wikipedia](https://de.wikipedia.org/wiki/Zeitreihe_der_Lufttemperatur_in_Deutschland)

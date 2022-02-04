@@ -175,8 +175,8 @@ def show_spines(ax, spines='lrtb'):
 if __name__ == '__main__':
     # load data:
     file_path = 'annual/air_temperature_mean/'
-    files = sorted(glob.glob(file_path + '*017.asc'))
-    #files = sorted(glob.glob(file_path + '*.asc'))
+    #files = sorted(glob.glob(file_path + '*017.asc'))
+    files = sorted(glob.glob(file_path + '*.asc'))
     years, xcoords, ycoords, temps = load_grids(files)
 
     # statistics:
@@ -226,5 +226,6 @@ if __name__ == '__main__':
     #ax.set_xlabel('Year')
     ax.yaxis.set_major_formatter(plt.FormatStrFormatter('%.0f°C'))
     ax.set_ylim(6, 12)
+    ax.grid(True, axis='y', color='gray', linestyle=':', linewidth=1)
     fig.savefig('images/air_temp_mean.png', dpi=200)
     plt.show()
