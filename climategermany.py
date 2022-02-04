@@ -64,16 +64,18 @@ def load_grids(file_pathes):
         First dimension is the year, second the y-coordinates, and
         third the x-coordinates.
     """
-    years = []
-    datas = []
+    years = np.zeros(len(files))
+    datas = np.array([])
     xcoords = np.array([])
     ycoords = np.array([])
-    for file in files:
+    for k, file in enumerate(files):
         print(f'load {file} ...')
         year, xcoords, ycoords, data = load_grid(file)
-        years.append(year)
-        datas.append(data)
-    return np.array(years), xcoords, ycoords, np.array(datas)
+        if len(datas) == 0:
+            datas = np.empty((len(files), *data.shape))
+        years[k] = year
+        datas[k] = data
+    return years, xcoords, ycoords, datas
 
 
 def show_spines(ax, spines='lrtb'):
@@ -173,8 +175,8 @@ def show_spines(ax, spines='lrtb'):
 if __name__ == '__main__':
     # load data:
     file_path = 'annual/air_temperature_mean/'
-    #files = sorted(glob.glob(file_path + '*017.asc'))
-    files = sorted(glob.glob(file_path + '*.asc'))
+    files = sorted(glob.glob(file_path + '*017.asc'))
+    #files = sorted(glob.glob(file_path + '*.asc'))
     years, xcoords, ycoords, temps = load_grids(files)
 
     # statistics:
