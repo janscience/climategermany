@@ -1,4 +1,3 @@
-import os
 import glob
 import numpy as np
 import matplotlib.pyplot as plt
@@ -23,7 +22,9 @@ def load_grid(file_path):
     data: 2D array
         Data on the grid defined by `xcoords` and `ycoords`.
     """
-    year = float(os.path.basename(file_path).split('_')[-1][:4])
+    # extract year from file name:
+    year = float(file_path.split('_')[-1][:4])
+    # read in meta data from file header:
     meta_data = {}
     with open(file_path, 'r') as sf:
         for k, line in enumerate(sf):
@@ -31,48 +32,52 @@ def load_grid(file_path):
                 break
             key, value = line.split(' ')
             meta_data[key] = float(value)
+    # extract some meta data:
     xorigin = meta_data.pop('XLLCORNER')
     yorigin = meta_data.pop('YLLCORNER')
     dxy = meta_data.pop('CELLSIZE')
     nodata = int(meta_data.pop('NODATA_VALUE'))
+    # read in data:
     data = np.loadtxt(file_path, skiprows=6)
     data[data==nodata] = np.nan
     data *= 0.1
+    # make coordinates:
     xcoords = np.arange(data.shape[1])*dxy + xorigin
     ycoords = np.arange(data.shape[0])*dxy + yorigin
     return year, xcoords, ycoords, data[::-1,:]
 
 
-def load_grids(file_pathes):
+def load_grids(file_paths):
     """Load many DWD grid data files.
 
     Parameters
     ----------
-    file_pathes: list of string
-        Pathes of all files to be loaded.
+    file_paths: list of string
+        Paths of all files to be loaded.
 
     Returns
     -------
-    years: float
+    years: array of float
         Years of the data.
     xcoords: array of floats
-        Gauss-Krueger x coordinates (Rechtswert)
+        Gauss-Krueger x coordinates (Rechtswert).
     ycoords: array of floats
-        Gauss-Krueger y coordinates (Hochwert)
+        Gauss-Krueger y coordinates (Hochwert).
     data: 3D array
         Data on the grid defined by `xcoords` and `ycoords`.
         First dimension is the year, second the y-coordinates, and
         third the x-coordinates.
     """
-    years = np.zeros(len(files))
+    years = np.zeros(len(file_paths))
     datas = np.array([])
     xcoords = np.array([])
     ycoords = np.array([])
-    for k, file in enumerate(files):
-        print(f'load {file} ...')
-        year, xcoords, ycoords, data = load_grid(file)
+    for k, file_path in enumerate(file_paths):
+        print(f'load {file_path} ...')
+        year, xcoords, ycoords, data = load_grid(file_path)
         if len(datas) == 0:
-            datas = np.empty((len(files), *data.shape))
+            # once we loaded the first file we can allocate the data cube:
+            datas = np.empty((len(file_paths), *data.shape))
         years[k] = year
         datas[k] = data
     return years, xcoords, ycoords, datas
@@ -175,17 +180,14 @@ def show_spines(ax, spines='lrtb'):
 if __name__ == '__main__':
     # load data:
     file_path = 'annual/air_temperature_mean/'
-    #files = sorted(glob.glob(file_path + '*017.asc'))
     files = sorted(glob.glob(file_path + '*.asc'))
     years, xcoords, ycoords, temps = load_grids(files)
 
     # statistics:
     min_temp = np.nanmin(temps)
     max_temp = np.nanmax(temps)
-    print(min_temp)
-    print(max_temp)
-    vmin = min_temp
-    vmax = max_temp
+    print(f'minimum temperature: {min_temp:5.1f}C')
+    print(f'maximum temperature: {max_temp:5.1f}C')
     vmin = 0.0
     vmax = 12.0
     mean_temps = np.array([np.nanmean(t) for t in temps])
@@ -195,22 +197,17 @@ if __name__ == '__main__':
                                   gridspec_kw=dict(width_ratios=[1, 8, 8],
                                                    height_ratios=[1, 3, 1, 3]))
     fig.subplots_adjust(left=0.1, right=0.98, top=0.95, bottom=0.05, hspace=0.1)
-    ax = axs['A']
-    show_spines(ax, '')
-    i = 0
-    mesh = ax.pcolormesh(xcoords, ycoords, temps[i],
-                         cmap='plasma', vmin=vmin, vmax=vmax)
-    ax.set_aspect('equal')
-    ax.set_title(f'{years[i]:.0f}')
-    
-    ax = axs['B']
-    show_spines(ax, '')
-    i = -1
-    mesh = ax.pcolormesh(xcoords, ycoords, temps[i],
-                         cmap='plasma', vmin=vmin, vmax=vmax)
-    ax.set_aspect('equal')
-    ax.set_title(f'{years[i]:.0f}')
-    
+
+    # temperature maps of Germany for two years:
+    for i, axn in zip([0, -1], ['A', 'B']):
+        ax = axs[axn]
+        show_spines(ax, '')
+        mesh = ax.pcolormesh(xcoords, ycoords, temps[i],
+                             cmap='plasma', vmin=vmin, vmax=vmax)
+        ax.set_aspect('equal')
+        ax.set_title(f'{years[i]:.0f}')
+
+    # time series of annual mean temperatures:
     ax = axs['C']
     fig.colorbar(mesh, cax=ax,
                  ticks=np.arange(0, 15, 2),
@@ -227,5 +224,6 @@ if __name__ == '__main__':
     ax.yaxis.set_major_formatter(plt.FormatStrFormatter('%.0f°C'))
     ax.set_ylim(6, 12)
     ax.grid(True, axis='y', color='gray', linestyle=':', linewidth=1)
+    
     fig.savefig('images/air_temp_mean.png', dpi=200)
     plt.show()
