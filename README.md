@@ -37,6 +37,10 @@ Here is a list of all available annual data:
 - [vegetation_begin](http://opendata.dwd.de/climate_environment/CDC/grids_germany/annual/vegetation_begin/)
 - [vegetation_end](http://opendata.dwd.de/climate_environment/CDC/grids_germany/annual/vegetation_end/)
 
+Load this data using the `load_grids()` function provided in the
+(dwdgriddata module)[dwdgriddata.py].
+
+
 ## Mean annual air temperature
 
 Data are available from 1881 on.
@@ -48,3 +52,17 @@ about 1980 on. The mean air temperature in Germany is already about
 2°C higher than before 1980!
 
 See also [wikipedia](https://de.wikipedia.org/wiki/Zeitreihe_der_Lufttemperatur_in_Deutschland)
+
+
+## CRU TS climate data from CEDA
+
+Global climate data (CRU data)[https://crudata.uea.ac.uk/cru/data/hrg/]
+available via (Centre for Environmental Data Analysis - CEDA)[https://data.ceda.ac.uk/badc/cru/data/cru_ts/cru_ts_4.06/data]. You need to register and log in.
+
+Select the type of data you need (temperature, precipitation etc.) and
+download the `dat.nc.gz` file for the time range you need.
+
+Unzip the file using `gunzip`.
+
+Load this data using the `load_grids()` function provided in the
+(cedancdata module)[cedancdata.py].

@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from dwdgriddata import load_grids
 
+
 def show_spines(ax, spines='lrtb'):
     """ Show and hide spines.
 
