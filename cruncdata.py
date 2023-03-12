@@ -2,11 +2,11 @@
 
 Functions for loading climate data of the CRU provided by CEDA at https://data.ceda.ac.uk.
 
-You need to install netCDF4 from (pypi)[https://pypi.org/project/netCDF4/]:
+You need to install netCDF4 from [pypi](https://pypi.org/project/netCDF4/):
 ```
 pip3 install netCDF4
 ```
-See (netCDF4 documentation)[https://unidata.github.io/netcdf4-python/].
+See [netCDF4 documentation](https://unidata.github.io/netcdf4-python/).
 
 ## Functions
 

@@ -56,8 +56,8 @@ See also [wikipedia](https://de.wikipedia.org/wiki/Zeitreihe_der_Lufttemperatur_
 
 ## CRU TS climate data from CEDA
 
-Global climate data (CRU data)[https://crudata.uea.ac.uk/cru/data/hrg/]
-available via (Centre for Environmental Data Analysis - CEDA)[https://data.ceda.ac.uk/badc/cru/data/cru_ts/cru_ts_4.06/data]. You need to register and log in.
+Global climate data [CRU data](https://crudata.uea.ac.uk/cru/data/hrg/)
+available via [Centre for Environmental Data Analysis - CEDA](https://data.ceda.ac.uk/badc/cru/data/cru_ts/cru_ts_4.06/data). You need to register and log in.
 
 Select the type of data you need (temperature, precipitation etc.) and
 download the `dat.nc.gz` file for the time range you need.
@@ -65,4 +65,4 @@ download the `dat.nc.gz` file for the time range you need.
 Unzip the file using `gunzip`.
 
 Load this data using the `load_grids()` function provided in the
-(cedancdata module)[cedancdata.py].
+[cedancdata module](cedancdata.py).
