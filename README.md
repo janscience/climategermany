@@ -66,3 +66,14 @@ Unzip the file using `gunzip`.
 
 Load this data using the `load_grids()` function provided in the
 [cedancdata module](cedancdata.py).
+
+
+## World cities
+
+Annotate your plots by adding city locations and names.
+
+Download the World Cities Database from
+[simplemaps](https://simplemaps.com/data/world-cities) and unzip
+it. Pass the location of the `worldcities.csv` file to the
+load_cities() function of the [`cities`](cities.py) module.
+

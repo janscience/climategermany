@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 from cruncdata import load_grids
+from cities import load_cities
 from IPython import embed
 
 # load precipitation data:
@@ -35,13 +37,30 @@ rain_end = months[np.argmax((np.roll(pre_year, 1, 0) >= thresh) & (pre_year >= t
 rain_start = np.ma.masked_where(np.ma.getmask(pre[0]), rain_start)
 rain_end = np.ma.masked_where(np.ma.getmask(pre[0]), rain_end)
 
+# load cities:
+cities_lon, cities_lat, cities_names, cities_pop = \
+    load_cities('maps/worldcities/worldcities.csv')
+sel = (cities_lat > lat_min) & (cities_lat < lat_max) & \
+      (cities_lon > lon_min) & (cities_lon < lon_max) & \
+      (cities_pop > 1e5)
+cities_names = np.array(cities_names)[sel]
+cities_pop = cities_pop[sel]
+cities_lat = cities_lat[sel]
+cities_lon = cities_lon[sel]
+
 # plot average precipitation at clicked location:
 def onclick(event):
     if lon_min < event.xdata < lon_max and lat_min < event.ydata < lat_max:
+        # index of coordinates:
         xi = np.argmin(np.abs(lon - event.xdata))
         yi = np.argmin(np.abs(lat - event.ydata))
+        # next city:
+        cities_dist = np.sqrt((cities_lon - event.xdata)**2 + (cities_lat - event.ydata)**2)
+        ci = np.argmin(cities_dist)
+        city = f'({cities_names[ci]})' if cities_dist[ci] < 0.5 else ''
+        # plot:
         fig, ax = plt.subplots()
-        ax.set_title(f'Precipitation at {event.xdata:.2f}, {event.ydata:.2f}')
+        ax.set_title(f'Precipitation at {event.xdata:.2f}, {event.ydata:.2f} {city}')
         ax.plot(months, pre_year[:, yi, xi], '-o', lw=2, zorder=10)
         for k in range(0, len(pre), 12):
             ax.plot(months, pre[k:k+12, yi, xi], '-', color='tab:blue',
@@ -62,6 +81,7 @@ fig, (ax1, ax2, cax) = plt.subplots(1, 3,
 fig.canvas.mpl_connect('button_press_event', onclick)
 ax1.set_title('Onset of rain season')
 ax1.contourf(lon, lat, rain_start, **cont_kwargs)
+ax1.scatter(cities_lon, cities_lat, s=cities_pop*0.2e-5, c='k')
 ax1.set_xlabel('Longitude')
 ax1.set_ylabel('Latitude')
 ax1.set_aspect('equal')
@@ -72,6 +92,7 @@ ax2.set_aspect('equal')
 ax2.get_shared_x_axes().join(ax1, ax2)
 ax2.get_shared_y_axes().join(ax1, ax2)
 cm = ax2.contourf(lon, lat, rain_end, **cont_kwargs)
+ax2.scatter(cities_lon, cities_lat, s=cities_pop*0.2e-5, c='k')
 fig.colorbar(cm, cax=cax)
 cax.set_yticks(months) 
 cax.set_yticklabels(month_names) 
