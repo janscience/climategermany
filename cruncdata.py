@@ -57,6 +57,8 @@ def load_grids(file_path, key=None):
         Data on the grid defined by `lon` and `lat`.
         First dimension is the date, second the latitude, and
         third the longitude.
+    unit: str
+        Unit of the data.
 
     Raises
     ------
@@ -67,6 +69,7 @@ def load_grids(file_path, key=None):
     lon = np.array([])
     lat = np.array([])
     data = np.array([])
+    unit = ''
     try:
         f = nc.Dataset(file_path)
         # coordinates:
@@ -82,9 +85,10 @@ def load_grids(file_path, key=None):
         if not key:
             key = list(f.variables.keys())[3]
         data = f.variables[key]
+        unit = data.units if hasattr(data, 'units') else ''
     except FileNotFoundError:
         print(f'Invalid file {file_path}')
-    return dates, lon, lat, data
+    return dates, lon, lat, data, unit
 
 
 if __name__ == '__main__':
