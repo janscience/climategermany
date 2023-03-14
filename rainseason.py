@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from cruncdata import load_grids
 from cities import load_cities
+from world import load_shapes, plot_outlines
 from IPython import embed
 
 # load precipitation data:
@@ -48,8 +49,14 @@ cities_pop = cities_pop[sel]
 cities_lat = cities_lat[sel]
 cities_lon = cities_lon[sel]
 
+# load shapes:
+countries = load_shapes('maps/ne_10m_admin_0_countries.zip')
+rivers = load_shapes('maps/ne_10m_rivers_lake_centerlines.zip')
+
 # plot average precipitation at clicked location:
 def onclick(event):
+    if not event.inaxes:
+        return
     if lon_min < event.xdata < lon_max and lat_min < event.ydata < lat_max:
         # index of coordinates:
         xi = np.argmin(np.abs(lon - event.xdata))
@@ -75,24 +82,35 @@ def onclick(event):
 
 # plot map:
 cont_kwargs = dict(levels=np.arange(13)-0.5, vmin=months[0]-0.2,
-                   vmax=months[-1]+0.8, cmap='hsv')
+                   vmax=months[-1]+0.8, cmap='hsv', zorder=0)
+countries_kwargs = dict(color='k', lw=0.5, zorder=20)
+rivers_kwargs = dict(color='b', lw=1, zorder=10)
+cities_kwargs = dict(color='k', zorder=30)
 fig, (ax1, ax2, cax) = plt.subplots(1, 3, 
                                     gridspec_kw=dict(width_ratios=(7, 7, 1)))
-fig.canvas.mpl_connect('button_press_event', onclick)
+fig.canvas.mpl_connect('button_release_event', onclick)
 ax1.set_title('Onset of rain season')
 ax1.contourf(lon, lat, rain_start, **cont_kwargs)
-ax1.scatter(cities_lon, cities_lat, s=cities_pop*0.2e-5, c='k')
+plot_outlines(ax1, countries, **countries_kwargs)
+plot_outlines(ax1, rivers, **rivers_kwargs)
+ax1.scatter(cities_lon, cities_lat, s=cities_pop*0.2e-5, **cities_kwargs)
 ax1.set_xlabel('Longitude')
 ax1.set_ylabel('Latitude')
+ax1.set_xlim(lon_min, lon_max)
+ax1.set_ylim(lat_min, lat_max)
 ax1.set_aspect('equal')
 ax2.set_title('Offset of rain season')
 ax2.set_xlabel('Longitude')
 ax2.yaxis.set_major_formatter(plt.NullFormatter())
+ax2.set_xlim(lon_min, lon_max)
+ax2.set_ylim(lat_min, lat_max)
 ax2.set_aspect('equal')
 ax2.get_shared_x_axes().join(ax1, ax2)
 ax2.get_shared_y_axes().join(ax1, ax2)
 cm = ax2.contourf(lon, lat, rain_end, **cont_kwargs)
-ax2.scatter(cities_lon, cities_lat, s=cities_pop*0.2e-5, c='k')
+plot_outlines(ax2, countries, **countries_kwargs)
+plot_outlines(ax2, rivers, **rivers_kwargs)
+ax2.scatter(cities_lon, cities_lat, s=cities_pop*0.2e-5, **cities_kwargs)
 fig.colorbar(cm, cax=cax)
 cax.set_yticks(months) 
 cax.set_yticklabels(month_names) 

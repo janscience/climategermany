@@ -77,3 +77,12 @@ Download the World Cities Database from
 it. Pass the location of the `worldcities.csv` file to the
 load_cities() function of the [`cities`](cities.py) module.
 
+
+## Natural Earth
+
+Annotate your plots by adding country outlines and much more.
+
+Dowload zip-files from [Natural Earth](https://www.naturalearthdata.com).
+Do not unpack the zip files. Pass them directly to `load_shapes()` from the
+[world](world.py) module. Plot the shapes with the `plot_outlines()`
+from the same module.
