@@ -51,6 +51,7 @@ cities_lon = cities_lon[sel]
 
 # load shapes:
 countries = load_shapes('maps/ne_10m_admin_0_countries.zip')
+provinces = load_shapes('maps/ne_10m_admin_1_states_provinces.zip')
 rivers = load_shapes('maps/ne_10m_rivers_lake_centerlines.zip')
 
 # plot average precipitation at clicked location:
@@ -83,7 +84,8 @@ def onclick(event):
 # plot map:
 cont_kwargs = dict(levels=np.arange(13)-0.5, vmin=months[0]-0.2,
                    vmax=months[-1]+0.8, cmap='hsv', zorder=0)
-countries_kwargs = dict(color='k', lw=0.5, zorder=20)
+countries_kwargs = dict(color='k', lw=0.5, zorder=30)
+provinces_kwargs = dict(color='gray', lw=0.5, zorder=20)
 rivers_kwargs = dict(color='b', lw=1, zorder=10)
 cities_kwargs = dict(color='k', zorder=30)
 fig, (ax1, ax2, cax) = plt.subplots(1, 3, 
@@ -92,6 +94,7 @@ fig.canvas.mpl_connect('button_release_event', onclick)
 ax1.set_title('Onset of rain season')
 ax1.contourf(lon, lat, rain_start, **cont_kwargs)
 plot_outlines(ax1, countries, **countries_kwargs)
+plot_outlines(ax1, provinces, **provinces_kwargs)
 plot_outlines(ax1, rivers, **rivers_kwargs)
 ax1.scatter(cities_lon, cities_lat, s=cities_pop*0.2e-5, **cities_kwargs)
 ax1.set_xlabel('Longitude')
@@ -109,6 +112,7 @@ ax2.get_shared_x_axes().join(ax1, ax2)
 ax2.get_shared_y_axes().join(ax1, ax2)
 cm = ax2.contourf(lon, lat, rain_end, **cont_kwargs)
 plot_outlines(ax2, countries, **countries_kwargs)
+plot_outlines(ax2, provinces, **provinces_kwargs)
 plot_outlines(ax2, rivers, **rivers_kwargs)
 ax2.scatter(cities_lon, cities_lat, s=cities_pop*0.2e-5, **cities_kwargs)
 fig.colorbar(cm, cax=cax)
