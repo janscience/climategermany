@@ -33,8 +33,12 @@ for m in months:
 
 # onset and offset of raining season:
 thresh = np.mean(pre_year, 0)
+rain_peak = months[np.argmax(pre_year, 0)]
+rain_trough = months[np.argmin(pre_year, 0)]
 rain_start = months[np.argmax((np.roll(pre_year, 2, 0) < thresh) & (np.roll(pre_year, 1, 0) < thresh) & (pre_year >= thresh) & (np.roll(pre_year, -1, 0) > thresh), 0)]
 rain_end = months[np.argmax((np.roll(pre_year, 1, 0) >= thresh) & (pre_year >= thresh) & (np.roll(pre_year, -1, 0) < thresh) & (np.roll(pre_year, -2, 0) < thresh), 0)]
+rain_peak = np.ma.masked_where(np.ma.getmask(pre[0]), rain_peak)
+rain_trough = np.ma.masked_where(np.ma.getmask(pre[0]), rain_trough)
 rain_start = np.ma.masked_where(np.ma.getmask(pre[0]), rain_start)
 rain_end = np.ma.masked_where(np.ma.getmask(pre[0]), rain_end)
 
@@ -84,13 +88,15 @@ def onclick(event):
 # plot map:
 cont_kwargs = dict(levels=np.arange(13)-0.5, vmin=months[0]-0.2,
                    vmax=months[-1]+0.8, cmap='hsv', zorder=0)
-countries_kwargs = dict(color='k', lw=0.5, zorder=30)
+countries_kwargs = dict(color='k', lw=0.8, zorder=30)
 provinces_kwargs = dict(color='gray', lw=0.5, zorder=20)
-rivers_kwargs = dict(color='b', lw=1, zorder=10)
-cities_kwargs = dict(color='k', zorder=30)
+rivers_kwargs = dict(color='b', lw=0.7, zorder=10)
+cities_kwargs = dict(color='k', zorder=40)
 fig, (ax1, ax2, cax) = plt.subplots(1, 3, 
                                     gridspec_kw=dict(width_ratios=(7, 7, 1)))
 fig.canvas.mpl_connect('button_release_event', onclick)
+#ax1.set_title('Peak of rain season')
+#ax1.contourf(lon, lat, rain_peak, **cont_kwargs)
 ax1.set_title('Onset of rain season')
 ax1.contourf(lon, lat, rain_start, **cont_kwargs)
 plot_outlines(ax1, countries, **countries_kwargs)
@@ -102,19 +108,25 @@ ax1.set_ylabel('Latitude')
 ax1.set_xlim(lon_min, lon_max)
 ax1.set_ylim(lat_min, lat_max)
 ax1.set_aspect('equal')
+#ax2.set_title('Trough of rain season')
+#cm = ax2.contourf(lon, lat, rain_trough, **cont_kwargs)
 ax2.set_title('Offset of rain season')
-ax2.set_xlabel('Longitude')
-ax2.yaxis.set_major_formatter(plt.NullFormatter())
-ax2.set_xlim(lon_min, lon_max)
-ax2.set_ylim(lat_min, lat_max)
-ax2.set_aspect('equal')
-ax2.get_shared_x_axes().join(ax1, ax2)
-ax2.get_shared_y_axes().join(ax1, ax2)
 cm = ax2.contourf(lon, lat, rain_end, **cont_kwargs)
 plot_outlines(ax2, countries, **countries_kwargs)
 plot_outlines(ax2, provinces, **provinces_kwargs)
 plot_outlines(ax2, rivers, **rivers_kwargs)
 ax2.scatter(cities_lon, cities_lat, s=cities_pop*0.2e-5, **cities_kwargs)
+ax2.set_xlabel('Longitude')
+ax2.yaxis.set_major_formatter(plt.NullFormatter())
+ax2.set_xlim(lon_min, lon_max)
+ax2.set_ylim(lat_min, lat_max)
+ax2.set_aspect('equal')
+try:
+    ax2.sharex(ax1)
+    ax2.sharey(ax1)
+except AttributeError:
+    ax2.get_shared_x_axes().join(ax1, ax2)
+    ax2.get_shared_y_axes().join(ax1, ax2)
 fig.colorbar(cm, cax=cax)
 cax.set_yticks(months) 
 cax.set_yticklabels(month_names) 
