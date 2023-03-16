@@ -18,24 +18,40 @@ import netCDF4 as nc
 
 
 def info(file_path):
-    """Load many DWD grid data files.
+    """Print title and properties of variables on console.
 
     Parameters
     ----------
     file_path: string
         Path of NC file.
+
+    Returns
+    -------
+    title: str
+        Title of the data set.
+    name: str
+        Name of the variable contained in the file.
+    Unit: str
+        Unit of the variable contained in the file.
     """
     with nc.Dataset(file_path) as f:
         print(f.title)
-        for k, v in f.variables.items():
+        dname = ''
+        dunit = ''
+        for i, (k, v) in enumerate(f.variables.items()):
             name = v.long_name if hasattr(v, 'long_name') else v.description
             unit = f'[{v.units}]' if hasattr(v, 'units') else ''
             shape = f'{v.shape}'[1:-1].rstrip(', ')
             print(f'{k:6}: {name:50} {unit:30} {shape}')
+            if i == 3:
+                dname = name
+                dunit = unit.strip('[]')
+        return f.title, dname, dunit
+    return '', '', ''
 
         
 def load_grids(file_path, key=None):
-    """Load many DWD grid data files.
+    """Load a CRU NC data file.
 
     Parameters
     ----------
@@ -92,10 +108,16 @@ def load_grids(file_path, key=None):
 
 
 if __name__ == '__main__':
+    import glob
     import matplotlib.pyplot as plt
-    info('ceda/cru_ts4.06.1901.2021.tmp.dat.nc')
-    dates, lon, lat, data = load_grids('ceda/cru_ts4.06.1901.2021.tmp.dat.nc')
-    plt.pcolormesh(lon, lat, data[10])
-    plt.show()
+    for file_path in sorted(glob.glob('ceda/cru*.dat.nc')):
+        print(file_path)
+        title, dname, dunit = info(file_path)
+        dates, lon, lat, data, unit = load_grids(file_path)
+        plt.title(f'{title}: {dname} [{dunit}]')
+        plt.pcolormesh(lon, lat, data[0])
+        plt.show()
+        print()
+
 
 
