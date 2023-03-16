@@ -77,10 +77,10 @@ The following data are available:
 | [pet](https://data.ceda.ac.uk/badc/cru/data/cru_ts/cru_ts_4.06/data/pet) | Potential evapotranspiration     | mm/day          |
 | [pre](https://data.ceda.ac.uk/badc/cru/data/cru_ts/cru_ts_4.06/data/pre) | Precipitation                    | mm/month        |
 | [tmn](https://data.ceda.ac.uk/badc/cru/data/cru_ts/cru_ts_4.06/data/tmn) | Near-surface temperature minimum | degrees Celsius |
-| [tmp(https://data.ceda.ac.uk/badc/cru/data/cru_ts/cru_ts_4.06/data/tmp)] | Near surface temperature         | degrees Celsius |
+| [tmp](https://data.ceda.ac.uk/badc/cru/data/cru_ts/cru_ts_4.06/data/tmp) | Near surface temperature         | degrees Celsius |
 | [tmx](https://data.ceda.ac.uk/badc/cru/data/cru_ts/cru_ts_4.06/data/tmx) | Near-surface temperature maximum | degrees Celsius |
-| [vap(https://data.ceda.ac.uk/badc/cru/data/cru_ts/cru_ts_4.06/data/vap)] | Vapour pressure                  | hPa             |
-| [wet](https://data.ceda.ac.uk/badc/cru/data/cru_ts/cru_ts_4.06/data/wet) | Rain days (wet day frewuency)    | days            |
+| [vap](https://data.ceda.ac.uk/badc/cru/data/cru_ts/cru_ts_4.06/data/vap) | Vapour pressure                  | hPa             |
+| [wet](https://data.ceda.ac.uk/badc/cru/data/cru_ts/cru_ts_4.06/data/wet) | Rain days (wet day frequency)    | days            |
 
 
 ## World cities
