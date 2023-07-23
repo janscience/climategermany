@@ -82,6 +82,8 @@ The following data are available:
 | [vap](https://data.ceda.ac.uk/badc/cru/data/cru_ts/cru_ts_4.06/data/vap) | Vapour pressure                  | hPa             |
 | [wet](https://data.ceda.ac.uk/badc/cru/data/cru_ts/cru_ts_4.06/data/wet) | Rain days (wet day frequency)    | days            |
 
+You need to install [`netCDF4`](https://pypi.org/project/netCDF4/) using pip.
+
 
 ## World cities
 
@@ -101,3 +103,5 @@ Dowload zip-files from [Natural Earth](https://www.naturalearthdata.com).
 Do not unpack the zip files. Pass them directly to `load_shapes()` from the
 [world](world.py) module. Plot the shapes with the `plot_outlines()`
 from the same module.
+
+You need to install [`pyshp`](https://pypi.org/project/pyshp/) using pip.
